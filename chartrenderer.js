@@ -8,7 +8,7 @@ var chart = AmCharts
 					"marginRight" : 80,
 					"autoMarginOffset" : 20,
 					"marginTop" : 7,
-					"dataProvider" : chartData,
+					"dataProvider" : chartData.move,
 					"valueAxes" : [ {
 						"axisAlpha" : 0.2,
 						"dashLength" : 1,
@@ -59,8 +59,36 @@ function zoomChart() {
 
 // generate some random data, quite different range
 function generateChartData() {
-	console.log(rawData[0]);
-	var chartData = [];
+	var chartData = {
+		move: [],
+		sleep: []
+	};
+	var rawData = localStorage.getItem("rawData");
+	$.each($.parseJSON(rawData), function(){
+		var date;
+		var distance;
+		var sleep;
+		$.each(this, function(key,value){
+			if(key === "DATE") {
+				date = new Date(value.substring(0,3), value.substring(4,5), value.substring(6,7));
+			}
+			if(key === "m_distance") {
+				distance = (value/1000).toFixed(1);
+			}
+			if(key === "s_duration") {
+				sleep = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, value);
+			}
+		});
+		chartData.move.push({
+			date : date.getDate(),
+			distance : distance
+		});
+		chartData.sleep.push({
+			date : date.getDate(),
+			sleep : sleep
+		});
+	});
+	/*var chartData = [];
 	var firstDate = new Date();
 	firstDate.setDate(firstDate.getDate() - 5);
 
@@ -79,6 +107,6 @@ function generateChartData() {
 			date : newDate,
 			visits : visits
 		});
-	}
+	}*/
 	return chartData;
 }
