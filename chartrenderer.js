@@ -1,4 +1,5 @@
 var chartData = generateChartData();
+
 var moveChart = AmCharts
 		.makeChart(
 				"moveChart",
@@ -97,13 +98,10 @@ moveChart.addListener("rendered", zoomChart);
 sleepChart.addListener("rendered", zoomChart);
 zoomChart();
 
-// this method is called when chart is first inited as we listen for
-// "dataUpdated" event
+// this method is called when chart is first inited as we listen for "dataUpdated" event
 function zoomChart() {
-	// different zoom methods can be used - zoomToIndexes, zoomToDates,
-	// zoomToCategoryValues
-	moveChart.zoomToDates(new Date(2005, 0, 1), new Date(Date.now()));
-	sleepChart.zoomToDates(new Date(2005, 0, 1), new Date(Date.now()));
+	moveChart.zoomToIndexes(0, chartData.move.length);
+	sleepChart.zoomToIndexes(0, chartData.sleep.length);
 }
 
 // generate data
@@ -122,10 +120,10 @@ function generateChartData() {
 				date = new Date( parseInt(value.substring(0,4)), parseInt(value.substring(4,6))-1, parseInt(value.substring(6,8)));
 			}
 			if(key === "m_distance") {
-				distance = isNaN(value)?0:(value/1000).toFixed(1);
+				distance = isNaN(value)?0:(value/1000).toFixed(2);
 			}
 			if(key === "s_duration") {
-				sleep = isNaN(value)?"0:00":new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, value);
+				sleep = isNaN(value)?0:(value/3600).toFixed(2);
 			}
 		});
 		if(!isNaN(Date.parse(date))) {
